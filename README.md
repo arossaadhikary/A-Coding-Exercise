@@ -3,6 +3,10 @@
 Description: RESTful Vehicle Service API using **FastAPI**, **SQLite**, and **SQLAlchemy**. Full CRUD operations on vehicle records and includes complete input validation, VIN verification according to U.S. standards, and automated tests using **pytest**.
 
 ## Features
+## Figma Thought Process
+View the project’s design board here:  
+[A — Coding Exercise (Figma Board)](https://www.figma.com/board/FLp0cZ9ryuLwTKnk2SH8FW/A---Coding-Exercise?node-id=0-1&p=f&t=z7hNYbwvEazsZ94B-0)
+
 ### CRUD Endpoints
 - **POST /vehicle** - create a new vehicle 
 - **GET /vehicle** – list all vehicles  
