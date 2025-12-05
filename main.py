@@ -27,13 +27,13 @@ def root():
     return {"message": "Hello, World!"}
 
 
-@app.get("/vehicles/", response_model=list[VehicleRead])
+@app.get("/vehicle/", response_model=list[VehicleRead])
 def list_vehicles(db: Session = Depends(get_db)):
     vehicles = db.query(models.Vehicle).all()
     return vehicles
 
 
-@app.post("/vehicles/", response_model=VehicleRead, status_code=status.HTTP_201_CREATED)
+@app.post("/vehicle/", response_model=VehicleRead, status_code=status.HTTP_201_CREATED)
 def create_vehicle(vehicle_in: VehicleCreate, db: Session = Depends(get_db)):
     vinNorm = normalizeVin(vehicle_in.vin)
 
@@ -62,7 +62,7 @@ def create_vehicle(vehicle_in: VehicleCreate, db: Session = Depends(get_db)):
 
     return vehicle
 
-@app.get("/vehicles/{vin}", response_model=VehicleRead)
+@app.get("/vehicle/{vin}", response_model=VehicleRead)
 def get_vehicle(vin: str, db: Session = Depends(get_db)):
     vinNorm = normalizeVin(vin)
     vehicle = db.query(models.Vehicle).filter(models.Vehicle.vin == vinNorm).first()
@@ -76,7 +76,7 @@ def get_vehicle(vin: str, db: Session = Depends(get_db)):
 
     return vehicle
 
-@app.put("/vehicles/{vin}", response_model=VehicleRead)
+@app.put("/vehicle/{vin}", response_model=VehicleRead)
 def update_vehicle(vin: str, vehicle_in: VehicleUpdate, db: Session = Depends(get_db)):
     vinNorm = normalizeVin(vin)
     vehicle = db.query(models.Vehicle).filter(models.Vehicle.vin == vinNorm).first()
@@ -108,3 +108,19 @@ def update_vehicle(vin: str, vehicle_in: VehicleUpdate, db: Session = Depends(ge
     db.refresh(vehicle)
 
     return vehicle
+
+@app.delete("/vehicle/{vin}", status_code = status.HTTP_204_NO_CONTENT)
+def delete_vehicle(vin: str, db: Session = Depends(get_db)):
+    vinNorm = normalizeVin(vin)
+    vehicle = db.query(models.Vehicle).filter(models.Vehicle.vin == vinNorm).first()
+
+    if not vehicle:
+        raise HTTPException(
+            status_code = status.HTTP_404_NOT_FOUND,
+            error=f"Vehicle with VIN {vinNorm} not found",
+        )
+    
+    db.delete(vehicle)
+    db.commit()
+
+    return None
