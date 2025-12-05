@@ -14,7 +14,7 @@ class VehicleBase(BaseModel):
 class VehicleCreate(VehicleBase):
     pass
 
-class VehicleUpdate(BaseModel):
+class VehicleUpdate(VehicleBase):
     pass
 
 class VehicleRead(VehicleBase):

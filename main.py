@@ -61,3 +61,50 @@ def create_vehicle(vehicle_in: VehicleCreate, db: Session = Depends(get_db)):
     db.refresh(vehicle)
 
     return vehicle
+
+@app.get("/vehicles/{vin}", response_model=VehicleRead)
+def get_vehicle(vin: str, db: Session = Depends(get_db)):
+    vinNorm = normalizeVin(vin)
+    vehicle = db.query(models.Vehicle).filter(models.Vehicle.vin == vinNorm).first()
+
+    # finding the vehicle 
+    if not vehicle:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            error=f"Vehicle with VIN {vinNorm} not found",
+        )
+
+    return vehicle
+
+@app.put("/vehicles/{vin}", response_model=VehicleRead)
+def update_vehicle(vin: str, vehicle_in: VehicleUpdate, db: Session = Depends(get_db)):
+    vinNorm = normalizeVin(vin)
+    vehicle = db.query(models.Vehicle).filter(models.Vehicle.vin == vinNorm).first()
+
+    if not vehicle:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            error=f"Vehicle with VIN {vinNorm} not found",
+        )
+
+    # Body VIN must match URL VIN
+    bodyVin = normalizeVin(vehicle_in.vin)
+    if bodyVin != vinNorm:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            error={"vin": ["VIN in body must match VIN in URL"]},
+        )
+
+    # update fields in db
+    vehicle.manuName = vehicle_in.manuName
+    vehicle.description = vehicle_in.description
+    vehicle.horsePower = vehicle_in.horsePower
+    vehicle.modelName = vehicle_in.modelName
+    vehicle.modelYear = vehicle_in.modelYear
+    vehicle.purchasePrice = vehicle_in.purchasePrice
+    vehicle.fuelType = vehicle_in.fuelType
+
+    db.commit()
+    db.refresh(vehicle)
+
+    return vehicle
