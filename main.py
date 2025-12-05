@@ -71,7 +71,7 @@ def get_vehicle(vin: str, db: Session = Depends(get_db)):
     if not vehicle:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            error=f"Vehicle with VIN {vinNorm} not found",
+            detail=f"Vehicle with VIN {vinNorm} not found",
         )
 
     return vehicle
@@ -84,7 +84,7 @@ def update_vehicle(vin: str, vehicle_in: VehicleUpdate, db: Session = Depends(ge
     if not vehicle:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            error=f"Vehicle with VIN {vinNorm} not found",
+            detail=f"Vehicle with VIN {vinNorm} not found",
         )
 
     # Body VIN must match URL VIN
@@ -92,7 +92,7 @@ def update_vehicle(vin: str, vehicle_in: VehicleUpdate, db: Session = Depends(ge
     if bodyVin != vinNorm:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            error={"vin": ["VIN in body must match VIN in URL"]},
+            detail={"vin": ["VIN in body must match VIN in URL"]},
         )
 
     # update fields in db
@@ -117,7 +117,7 @@ def delete_vehicle(vin: str, db: Session = Depends(get_db)):
     if not vehicle:
         raise HTTPException(
             status_code = status.HTTP_404_NOT_FOUND,
-            error=f"Vehicle with VIN {vinNorm} not found",
+            detail=f"Vehicle with VIN {vinNorm} not found",
         )
     
     db.delete(vehicle)
