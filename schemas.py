@@ -5,7 +5,7 @@ class VehicleBase(BaseModel):
     
     manuName: constr(strip_whitespace=True, min_length=1)
     description: str | None = None
-    horsePower: coint(ge=0)
+    horsePower: conint(ge=0)
     modelName: constr(strip_whitespace=True, min_length=1)
     modelYear: conint(ge=1886, le=2100)
     purchasePrice: confloat(ge=0)
@@ -21,4 +21,4 @@ class VehicleRead(VehicleBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attribute = True
