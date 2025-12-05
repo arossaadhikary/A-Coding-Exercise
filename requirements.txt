@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-sqalchemy
+sqlalchemy
 pydantic
 pytest
 httpx
