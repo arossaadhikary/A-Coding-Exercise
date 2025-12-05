@@ -83,8 +83,7 @@ def get_vehicle_or_404(vin: str, db: Session):
 
 @app.get("/")
 def root():
-    return {"message": "Hello, World!"}
-
+    return {"message": "Apollo Coding Excerise"}
 
 @app.get("/vehicle/", response_model=list[VehicleRead])
 def list_vehicles(db: Session = Depends(get_db)):
