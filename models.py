@@ -14,5 +14,6 @@ class Vehicle(Base):
     description = Column(String, index = True)
     horsePower = Column(Integer, index = True)
     modelName = Column(String, index = True)
+    modelYear = Column(Integer, index = True)
     purchasePrice = Column(Float, index = True)
     fuelType = Column(String, index = True)
